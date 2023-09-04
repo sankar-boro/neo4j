@@ -17,26 +17,31 @@ pub struct InsertUser {
   email: String,
 }
 
-pub async fn get_user(client: web::Data<Arc<Graph>>) -> Result<HttpResponse, HttpErrorResponse> {
+pub async fn get_user(client: web::Data<Arc<Graph>>, fname: web::Path<String>) -> Result<HttpResponse, HttpErrorResponse> {
     let mut result = client.execute(
-      query("MATCH (p:Person {name: 'Sankar boro'}) RETURN p")
+      query("MATCH (p:User {fname: $fname }) RETURN p").param("fname", fname.as_str())
     ).await.unwrap();
     let mut users = Vec::new();
     while let Ok(Some(row)) = result.next().await {
       let node: Node = row.get("p").unwrap();
-      let name: String = node.get("name").unwrap();
-      let user = serde_json::json!({ "name": name });
+      let fname: String = node.get("fname").unwrap();
+      let lname: String = node.get("lname").unwrap();
+      let email: String = node.get("email").unwrap();
+      let user = serde_json::json!({ "fname": fname, "lname": lname, "email": email });
       users.push(user);
     }
     Ok(HttpResponse::Ok().json(users))
 }
 
 
-pub async fn create_user(client: web::Data<Graph>, form: web::Json<InsertUser>) -> HttpResponse {
+pub async fn create_user(client: web::Data<Arc<Graph>>, form: web::Json<InsertUser>) -> HttpResponse {
        //Transactions
        let txn = client.start_txn().await.unwrap();
        txn.run_queries(vec![
-           query(&format!("CREATE (p:Person {{ fname: {}, lname: {}, email: {} }} )", &form.fname, &form.lname, &form.email)),
+           query("CREATE (p:User {fname: $fname, lname: $lname, email: $email })")
+           .param("fname", form.fname.to_string())
+           .param("lname", form.lname.to_string())
+           .param("email", form.email.to_string()),
        ])
        .await
        .unwrap();
