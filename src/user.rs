@@ -19,15 +19,13 @@ pub struct InsertUser {
 
 pub async fn get_user(client: web::Data<Arc<Graph>>) -> Result<HttpResponse, HttpErrorResponse> {
     let mut result = client.execute(
-      query("MATCH (p:Person {fname: 'Sankar'}) RETURN p")
+      query("MATCH (p:Person {name: 'Sankar boro'}) RETURN p")
     ).await.unwrap();
     let mut users = Vec::new();
     while let Ok(Some(row)) = result.next().await {
       let node: Node = row.get("p").unwrap();
-      let fname: String = node.get("fname").unwrap();
-      let lname: String = node.get("lname").unwrap();
-      let email: String = node.get("email").unwrap();
-      let user = serde_json::json!({ "fname": fname, "lname": lname, "email": email });
+      let name: String = node.get("name").unwrap();
+      let user = serde_json::json!({ "name": name });
       users.push(user);
     }
     Ok(HttpResponse::Ok().json(users))
