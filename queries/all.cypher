@@ -1,2 +1,2 @@
 MATCH (n) DETACH DELETE n;
-
+MATCH (n) RETURN n;
