@@ -46,6 +46,18 @@ pub async fn create_user(client: web::Data<Arc<Graph>>, form: web::Json<InsertUs
        .await
        .unwrap();
        txn.commit().await.unwrap(); //or txn.rollback().await.unwrap();
-      HttpResponse::Ok().body("Inserted user")
-       
+      HttpResponse::Ok().body("Inserted user") 
+}
+
+pub async fn test_create_user(client: web::Data<Arc<Graph>>, _: web::Json<InsertUser>) -> HttpResponse {
+  //Transactions
+  let txn = client.start_txn().await.unwrap();
+  let test_query = "CREATE (p:User {fname: 'Test', lname: 'test', email: 'test@gmail.com' })";
+  txn.run_queries(vec![
+      query(test_query.into()),
+  ])
+  .await
+  .unwrap();
+  txn.commit().await.unwrap(); //or txn.rollback().await.unwrap();
+ HttpResponse::Ok().body("Inserted user") 
 }
