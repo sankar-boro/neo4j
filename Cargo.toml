@@ -34,3 +34,4 @@ derive_more = "0.99.17"
 uuid = { version = "1.4.1", features = ["v4", "fast-rng", "macro-diagnostics"] }
 pest = "2.7.3"
 pest_derive = "2.7.3"
+sqlparser = "0.37.0"
