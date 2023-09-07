@@ -49,6 +49,15 @@ impl From<SessionGetError> for HttpErrorResponse {
     }
 }
 
+impl From<neo4rs::Error> for HttpErrorResponse {
+    fn from(e: neo4rs::Error) -> Self {
+        HttpErrorResponse {
+            status: StatusCode::INTERNAL_SERVER_ERROR,
+            message: e.to_string(),
+        }
+    }
+}
+
 //
 impl From<String> for HttpErrorResponse {
     fn from(e: String) -> Self {
