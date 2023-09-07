@@ -2,6 +2,8 @@ mod connection;
 mod route;
 mod user;
 mod error;
+mod query;
+mod parser;
 
 use std::env;
 use anyhow::Result;
