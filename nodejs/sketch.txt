@@ -1,0 +1,18 @@
+users
+    userid,
+    name,
+    age,
+    email,
+    married
+
+married
+    userid,
+    name,
+    married
+
+drinks
+    userid,
+    name,
+    drinks
+
+const users = {}

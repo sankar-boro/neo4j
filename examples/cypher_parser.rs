@@ -152,8 +152,14 @@ impl<'a> CypherParser<'a> {
     fn parse(&mut self) {
         while self.current_token.is_some() {
             match self.current_token {
-                Some(Token::Match) => self.match_clause(),
-                _ => panic!("Unexpected token: {:?}", self.current_token),
+                Some(Token::Match) => {
+                    println!("{:?}", self.current_token);
+                    self.match_clause()
+                },
+                _ => {
+                    println!("{:?}", self.current_token);
+                    panic!("Unexpected token: {:?}", self.current_token)
+                },
             }
         }
     }
