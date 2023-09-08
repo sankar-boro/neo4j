@@ -4,40 +4,24 @@ const users = [
     {userId: 2, fname: 'Pankaj', lname: 'Boro', age: 50, married: false, salary: 30000 }
 ];
 
-function equalsTo(left, right) {
-    if (left === right) {
-        return true
-    }
-    return false;
-}
+const expenses = [
+	{
+		uid: 1,
+		title: "Paid for salary",
+		amount: 50000,
+	}
+]
 
-function greaterThen(left, right) {
-    if (left > right) {
-        return true
+const salaries = [
+	{
+        userId: 1,
+        expenseId: 1,
+        paid: 40000,
     }
-    return false;
-}
-
-const ifs = [
-    {
-        name: 'married',
-        type: 'equalsTo',
-        value: true,
-        linkedTable: 'marriedTable',
-        fn: equalsTo,
-        then: () => {},
-    },
-    {
-        name: 'age',
-        type: 'greaterThen',
-        value: 18,
-        linkedTable: 'canDrinkTable',
-        fn: greaterThen,
-        then: () => {},
-    },
-];
+]
 
 module.exports = {
     users,
-    ifs
+    expenses,
+    salaries
 }
