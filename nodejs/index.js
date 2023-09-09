@@ -23,21 +23,41 @@ function v1() {
     console.log(tables)
 }
 
-function run(left, right) {
-    const balances = [];
-
-    actions.forEach((action) => {
-        const fn_ = action.fn;
-        const doThen = action.doThen;
-
-        const validation = fn_(left[action.left], right[action.right]);
-        if (validation) {
-            const x = (b) => { balances.push({ id: 1, balance: b, userId: 1 }) }
-            doThen(left[action.left], right[action.right], x);
-        }
-    })
-
-    console.log(balances);
+function lessThan(left, right) {
+    if (left < right) {
+        return true
+    }
+    return false;
 }
 
-run(expenses[0], salaries[0])
+const comparedFns = {
+    lessThan: lessThan
+}
+
+function runQuery(mapObj) {
+    const reg = /\$[a-zA-Z_]\w*/g
+    const str = "INSERT INTO users(userid, fname, lname, email) VALUES($userid, $fname, $lname, $email)";
+    const res = str.replaceAll(reg, function(matched){
+        return `"${mapObj[matched]}"`;
+    });
+    console.log(res);
+}
+
+function run(row, validation) {
+    const fn_ = comparedFns[validation.match];
+    let x = fn_(row[validation.matchField], validation.value);
+}
+
+runQuery({$userid: 1, $fname: 'Sankar', $lname: 'Boro', $email: 'sankar.boro@yahoo.com' })
+
+// run({
+//     id: 1, 
+//     paid: 40000, 
+//     userId: 1 
+// }, 
+// { 
+//     value: 50000, 
+//     match: "lessThan", 
+//     matchField: 'paid', 
+//     query: "INSERT INTO dueSalaries(due, userId) VALUES($due, $userId)"
+// })
